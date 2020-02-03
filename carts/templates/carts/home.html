@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{% if cart.products.exists %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">SL</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Product Price</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for product in cart.products.all %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td><a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+          {% include 'products/snippets/add_to_cart.html' with product=product cart=cart  in_cart=True %}
+      </td>
+      <td><a href="">Del</a>/<a href="">Add</a></td>
+      <td>{{ product.price|stringformat:'.2f' }}</td>
+    </tr>
+  {% endfor %}
+  <tr>
+      <td colspan="3"></td>
+      <td>Subtotal: {{ cart.subtotal|stringformat:'.2f' }}</td>
+    </tr>
+  <tr>
+      <td colspan="3"></td>
+      <td>Total: {{ cart.total }}</td>
+    </tr>
+  <tr>
+      <td colspan="3"></td>
+      <td><a href="{% url 'cart:checkout' %}" class="btn btn-success">Checkout</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% else %}
+    <p class="lead">@{{ request.user.username }}, Your Cart is Empty</p>
+{% endif %}
+
+{% endblock %}

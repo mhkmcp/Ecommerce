@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+{{ object.order_id }} -- {{ object.cart }}
+
+{% if not billing_profile %}
+    <div class="row text-center">
+        <div class="col-12 col-md-6">
+            <h3 class="text-center">Login</h3>
+            {% include 'accounts/snippets/form.html' with form=login_form title=title next=request.build_absolute_uri %}
+        </div>
+        <div class="col-12 col-md-6">
+            <h3>Continue as Guest</h3>
+            {% url 'cart:guest_register' as guest_url %}
+            {% include 'accounts/snippets/form.html' with form=guest_form next=request.build_absolute_uri action_url=guest_url %}
+        </div>
+    </div>
+{% else %}
+    {% if not object.billing_address and not object.shipping_address %}
+    pass
+    {% else %}
+        <h1>Checkout</h1>
+        <p>Cart Total: {{ object.total }}</p>
+        <p>Shipping Total: {{ object.shipping_total }}</p>
+        <p>Order Total: {{ object.total }}</p>
+    {% endif %}
+{% endif %}
+
+
+{% endblock %}
