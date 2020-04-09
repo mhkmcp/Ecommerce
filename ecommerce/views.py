@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.shortcuts import render, redirect
 from accounts.forms import ContactForm, LoginForm, RegisterForm
 
+# all views down below has been transferred to Accounts/View
+
 
 # def home_page(request):
 #     context = {
