@@ -6,6 +6,7 @@ from django.utils.http import is_safe_url
 
 from .forms import ContactForm, LoginForm, RegisterForm, GuestForm
 from .models import Guest
+from .signals import user_logged_in
 
 
 def home_page(request):
@@ -40,7 +41,6 @@ def contact_page(request):
         errors = contact_form.errors.as_json()
         if request.is_ajax():
             return HttpResponse(errors, status=400, content_type='application/json')
-
 
     if request.method == 'POST':
         print(request.POST)
@@ -90,6 +90,7 @@ class LoginView(FormView):
 
         if user is not None:
             login(request, user)
+            user_logged_in.send(user.__class__, instance=user, request=request)
             try:
                 del request.session['guest_id']
             except:

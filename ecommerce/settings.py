@@ -28,15 +28,15 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # custom apps
-
+    'accounts.apps.AccountsConfig',
+    'addresses.apps.AddressesConfig',
+    'analytics.apps.AnalyticsConfig',
+    'billing.apps.BillingConfig',
+    'carts.apps.CartsConfig',
+    'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
     'search.apps.SearchConfig',
     'tags.apps.TagsConfig',
-    'carts.apps.CartsConfig',
-    'orders.apps.OrdersConfig',
-    'accounts.apps.AccountsConfig',
-    'billing.apps.BillingConfig',
-    'addresses.apps.AddressesConfig',
 
     # 3rd party apps
 
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'   # changes built in user model to ours
+FORCE_SESSION_TO_ONE = False
+FORCE_INACTIVE_END_SESSION = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

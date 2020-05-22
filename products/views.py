@@ -2,6 +2,7 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 
+from analytics.mixins import ObjectViewedMixin
 from carts.models import Cart
 from .models import Product
 
@@ -27,7 +28,7 @@ class ProductFeaturedListView(ListView):
     #     return Product.objects.featured()
 
 
-class ProductDetailSlugView(DetailView):
+class ProductDetailSlugView(ObjectViewedMixin, DetailView):
     queryset = Product.objects.featured()
     template_name = 'products/product_details.html'
 
@@ -37,7 +38,7 @@ class ProductDetailSlugView(DetailView):
         context['cart'] = cart_obj
         return context
 
-    def get_object(self, queryset=None):
+    def get_object(self, *args, **kwargs):
         request = self.request
         slug = self.kwargs.get('slug')
 
@@ -46,12 +47,14 @@ class ProductDetailSlugView(DetailView):
         except Product.DoesNotExist:
             raise Http404('Not Found')
         except Product.MultipleObjectsReturned:
-            qs = Product.objects.filter(slug=slug, active=true)
+            qs = Product.objects.filter(slug=slug, active=True)
             instance = qs.first()
+
+        # object_viewed_signal.send(instance.__class__, instance=instance, request=request)
         return instance
 
 
-class ProductFeaturedDetailView(DetailView):
+class ProductFeaturedDetailView(ObjectViewedMixin, DetailView):
     queryset = Product.objects.featured()
     template_name = 'products/featured_details.html'
 
@@ -60,7 +63,7 @@ class ProductFeaturedDetailView(DetailView):
     #     return Product.objects.featured()
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(ObjectViewedMixin, DetailView):
     model = Product
     template_name = 'products/product_details.html'
 
